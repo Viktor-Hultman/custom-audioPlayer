@@ -13,17 +13,28 @@
 
 <body>
     <div id="audio-player-container">
-      <audio id="player" preload="metadata"></audio>
-      <img id="play-pause" src="./imgs/play.svg">
-      <img id="skip-back" src="./imgs/back.svg" onclick="skipBackwards()">
-      <img id="skip-forward" src="./imgs/forward.svg" onclick="skipForward()">
-      <button id="playback-speed">1x</button>
-      <input type="range" id="seek-slider" max="100" value="0">
-      <span id="current-time" class="time">0:00</span>|
-      <span id="duration-time" class="time">0:00</span>
-      <img id="volume-icon" src="./imgs/volume-full.svg">
-      <input type="range" id="volume-slider" max="100" value="100">
-      <output id="volume-output">100</output>
+      <audio data-player preload="metadata"></audio>
+      <div data-play-pause>
+        <img data-play src="./imgs/play.svg" style="display: block;">
+        <img data-pause src="./imgs/pause.svg" style="display: none;">
+      </div>
+      <div data-skip-back>
+        <img src="./imgs/back.svg" style="display: block;">
+      </div>
+      <div data-skip-forward>
+        <img src="./imgs/forward.svg" style="display: block;">
+      </div>
+      <div data-playback-speed>1x</div>
+      <input data-seek-slider type="range" max="100" value="0">
+      <span data-current-time>0:00</span>|
+      <span data-duration-time>0:00</span>
+      <div data-volume-icon>
+        <img data-volume-full src="./imgs/volume-full.svg" style="display: block;"> 
+        <img data-volume-half src="./imgs/volume-half.svg" style="display: none;">
+        <img data-volume-off src="./imgs/volume-off.svg" style="display: none;">
+      </div>
+      <input data-volume-slider type="range" max="100" value="100">
+      <output data-volume-output>100</output>
     </div>
 
 

@@ -1,54 +1,78 @@
 const audioPlayerContainer = document.querySelector('#audio-player-container');
-const player = document.querySelector('#player')
-const playPause = document.querySelector('#play-pause')
-const volumeIcon = document.querySelector('#volume-icon')
-const current = document.querySelector('#current-time')
-const duration = document.querySelector('#duration-time')
-const seekSlider = document.querySelector('#seek-slider');
-const volumeSlider = document.querySelector('#volume-slider');
-const output = document.querySelector('#volume-output');
-const speedButton = document.querySelector('#playback-speed');
+const player = audioPlayerContainer.querySelector('[data-player]')
 
-volumeSlider.addEventListener('input', (e) => {
+const playPauseContainer = audioPlayerContainer.querySelector('[data-play-pause]')
+const playButton = playPauseContainer.querySelector('[data-play]')
+const pauseButton = playPauseContainer.querySelector('[data-pause]')
+
+const skipBack = audioPlayerContainer.querySelector('[data-skip-back]')
+const skipForward = audioPlayerContainer.querySelector('[data-skip-forward]')
+
+const speedButton = audioPlayerContainer.querySelector('[data-playback-speed]');
+
+const seekSlider = audioPlayerContainer.querySelector('[data-seek-slider]');
+
+const current = audioPlayerContainer.querySelector('[data-current-time]')
+const duration = audioPlayerContainer.querySelector('[data-duration-time]')
+
+const volumeIconContainer = audioPlayerContainer.querySelector('[data-volume-icon]')
+const volumeFull = volumeIconContainer.querySelector('[data-volume-full]')
+const volumeHalf = volumeIconContainer.querySelector('[data-volume-half]')
+const volumeOff = volumeIconContainer.querySelector('[data-volume-off]')
+
+const volumeSlider = audioPlayerContainer.querySelector('[data-volume-slider]');
+const output = audioPlayerContainer.querySelector('[data-volume-output]');
+
+//Targeting all the elements of the audio player
+
+
+volumeSlider.addEventListener('input', (e) => { //Listener for the volumeslider
   const value = e.target.value;
-  output.textContent = value;
-  player.volume = value / 100;
+  output.textContent = value; //Changeing the value of the display text of the amount of volume
+  player.volume = value / 100; //Setting the volume of the player to the target value but converted to be between 0.0 - 1.0
 
-  if(player.volume < 0.1){
-    volumeIcon.src = "./imgs/volume-off.svg";
-  } else if (player.volume < 0.5){
-    volumeIcon.src = "./imgs/volume-half.svg";
-  } else {
-    volumeIcon.src = "./imgs/volume-full.svg";
+  if(player.volume < 0.1){ //If the volume is below 10%
+    volumeOff.style = 'display: block;'
+    volumeHalf.style = 'display: none;'
+    volumeFull.style = 'display: none;'
+  } else if (player.volume < 0.5){ //If the volume is below 50%
+    volumeOff.style = 'display: none;'
+    volumeHalf.style = 'display: block;'
+    volumeFull.style = 'display: none;'
+  } else { //If the volume is above 50%
+    volumeOff.style = 'display: none;'
+    volumeHalf.style = 'display: none;'
+    volumeFull.style = 'display: block;'
   }
 
 });
 
-let playState = 'paused'
+let playState = 'paused' // Global variable for what 'state' the aodioplayer is in currently, 'paused' or 'playing'
 
 let RAF = null;
-let speeds = [
+
+let speeds = [ //The avaliable speeds the playback should have
   0.5, 1, 1.5, 2
 ]
 
-player.src = "https://assets.codepen.io/4358584/Anitek_-_Komorebi.mp3"
+// player.src = "https://assets.codepen.io/4358584/Anitek_-_Komorebi.mp3" //Src for the player
 
 
-seekSlider.addEventListener('input', () => {
-  current.textContent = calculateTime(seekSlider.value);
-  if(!player.paused) {
+seekSlider.addEventListener('input', () => { //Listener for when an input/drag event happens on the 'playtrack'
+  current.textContent = calculateTime(seekSlider.value); //Changing the 'current time' of the track
+  if(!player.paused) { //If the track is playing then the slider and current time should not be auto updating while the event is happening
     cancelAnimationFrame(RAF);
   }
 });
 
-seekSlider.addEventListener('change', () => {
-  player.currentTime = seekSlider.value;
-  if(!player.paused) {
+seekSlider.addEventListener('change', () => { //Listener for when an input/drag event is finished on the 'playtrack'
+  player.currentTime = seekSlider.value; //Updating the players current time with the value the user has selected
+  if(!player.paused) { //Auto updating of the track continue if playing
     requestAnimationFrame(whilePlaying);
   }
 });
 
-speedButton.addEventListener('click', () => {
+speedButton.addEventListener('click', () => { //Function for toggle between the different playback speeds
   let current = speeds.indexOf(player.playbackRate)
   if(current == speeds.length - 1){
     current = -1
@@ -58,67 +82,73 @@ speedButton.addEventListener('click', () => {
   speedButton.innerText = player.playbackRate + "x" 
 });
 
-playPause.addEventListener('click', () => {
-  if(playState == 'paused'){//If the player is paused it should play
-    playPause.src = "./imgs/pause.svg"
-    player.play()
-    requestAnimationFrame(whilePlaying);
-    playState = 'playing'
-  } else {//If the player is playing it should pause
-    playPause.src = "./imgs/play.svg"
-    player.pause()
-    cancelAnimationFrame(RAF);
-    playState = 'paused'
-  }
+playPauseContainer.addEventListener('click', playToggle) //Run play function on click
+
+skipBack.addEventListener('click', () => { //Function for 'jumping back' some time on the track
+  player.currentTime -= 10;
+  seekSlider.value = Math.floor(player.currentTime);
+  current.textContent = calculateTime(seekSlider.value);
+})
+
+skipForward.addEventListener('click', () => { //Function for forwarding some time on the track
+  player.currentTime += 10;
+  seekSlider.value = Math.floor(player.currentTime);
+  current.textContent = calculateTime(seekSlider.value);
 })
 
 
-function whilePlaying() {
+function updateSrc(src) {//Function for updating the src of the player
+  player.src = src
+  pauseButton.style = 'display: block;'
+  playButton.style = 'display: none;'
+  player.currentTime = 0
+  current.textContent = "0:00";
+  playState = 'playing'
+  player.play()
+  requestAnimationFrame(whilePlaying);
+}
+
+function playToggle() { //Function for the play and pause button
+  if(player.src == null || player.src == undefined || player.src == false){ //If the player does not have a src the play/pause button should not work
+    return
+  }
+  if(playState == 'paused'){//If the player is paused it should play
+    pauseButton.style = 'display: block;'
+    playButton.style = 'display: none;'
+    player.play()
+    requestAnimationFrame(whilePlaying); //Starting the auto update of the audio track
+    playState = 'playing'
+  } else {//If the player is playing it should pause
+    playButton.style = 'display: block;'
+    pauseButton.style = 'display: none;'
+    player.pause()
+    cancelAnimationFrame(RAF); //Cancel the auto update of the audio track
+    playState = 'paused'
+  }
+}
+
+function whilePlaying() { //Function that updates the audiotrack
   seekSlider.value = Math.floor(player.currentTime);
   current.textContent = calculateTime(seekSlider.value);
   RAF = requestAnimationFrame(whilePlaying);
 }
 
-function setSliderMax() {
+function setSliderMax() { //Function for setting the max val of the track slider to be the same as the audio length
   seekSlider.max = Math.floor(player.duration);
 }
 
-function displayDuration() {
+function displayDuration() { //Function for setting and displaying the audio length on the player
   duration.textContent = calculateTime(player.duration);
 }
 
-function calculateTime(secs) {
+function calculateTime(secs) { //Function for calculating and returning minutes and seconds from only seconds parameter
   const minutes = Math.floor(secs / 60);
   const seconds = Math.floor(secs % 60);
   const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
   return `${minutes}:${returnedSeconds}`;
 }
 
-function skipForward(params) {
-  player.currentTime += 10;
-  seekSlider.value = Math.floor(player.currentTime);
-  current.textContent = calculateTime(seekSlider.value);
-}
-
-function skipBackwards(params) {
-  player.currentTime -= 10;
-  seekSlider.value = Math.floor(player.currentTime);
-  current.textContent = calculateTime(seekSlider.value);
-}
-
-function showRangeProgress(rangeInput) {
-  if(rangeInput === seekSlider) audioPlayerContainer.style.setProperty('--seek-before-width', rangeInput.value / rangeInput.max * 100 + '%');
-  else audioPlayerContainer.style.setProperty('--volume-before-width', rangeInput.value / rangeInput.max * 100 + '%');
-}
-
-seekSlider.addEventListener('input', (e) => {
-  showRangeProgress(e.target);
-});
-volumeSlider.addEventListener('input', (e) => {
-  showRangeProgress(e.target);
-});
-
-
+//Checks if the audio has been loaded so we can use the length of our audio in our functions
 if (player.readyState > 0) {
   displayDuration();
   setSliderMax();
