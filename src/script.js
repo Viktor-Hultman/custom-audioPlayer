@@ -51,11 +51,13 @@ let playState = 'paused' // Global variable for what 'state' the aodioplayer is 
 
 let RAF = null;
 
+const useEvents = ["click", "keypress"];
+
 let speeds = [ //The avaliable speeds the playback should have
   0.5, 1, 1.5, 2
 ]
 
-// player.src = "https://assets.codepen.io/4358584/Anitek_-_Komorebi.mp3" //Src for the player
+let testSrc = "https://assets.codepen.io/4358584/Anitek_-_Komorebi.mp3" //Src example for the player
 
 
 seekSlider.addEventListener('input', () => { //Listener for when an input/drag event happens on the 'playtrack'
@@ -72,30 +74,62 @@ seekSlider.addEventListener('change', () => { //Listener for when an input/drag 
   }
 });
 
-speedButton.addEventListener('click', () => { //Function for toggle between the different playback speeds
-  let current = speeds.indexOf(player.playbackRate)
-  if(current == speeds.length - 1){
-    current = -1
-  }
-  player.playbackRate = speeds[current + 1]
-  console.log(player.playbackRate)
-  speedButton.innerText = player.playbackRate + "x" 
+useEvents.forEach(event=> {
+  speedButton.addEventListener(event, (e) => { //Function for toggle between the different playback speeds
+    if(event == "click" || e.keyCode == 13){
+      let current = speeds.indexOf(player.playbackRate)
+      if(current == speeds.length - 1){
+        current = -1
+      }
+      player.playbackRate = speeds[current + 1]
+      console.log(player.playbackRate)
+      speedButton.innerText = player.playbackRate + "x" 
+    }
+  });
 });
 
-playPauseContainer.addEventListener('click', playToggle) //Run play function on click
+useEvents.forEach(event=> {
+  playPauseContainer.addEventListener(event, (e) => { //Event for playing or pausing the track
+    if(event == "click" || e.keyCode == 13){
+      if(player.src == null || player.src == undefined || player.src == false){ //If the player does not have a src the play/pause button should not work
+        return
+      }
+      if(playState == 'paused'){//If the player is paused it should play
+        pauseButton.style = 'display: block;'
+        playButton.style = 'display: none;'
+        player.play()
+        requestAnimationFrame(whilePlaying); //Starting the auto update of the audio track
+        playState = 'playing'
+      } else {//If the player is playing it should pause
+        playButton.style = 'display: block;'
+        pauseButton.style = 'display: none;'
+        player.pause()
+        cancelAnimationFrame(RAF); //Cancel the auto update of the audio track
+        playState = 'paused'
+      }
+    }
+  });
+});
 
-skipBack.addEventListener('click', () => { //Function for 'jumping back' some time on the track
-  player.currentTime -= 10;
-  seekSlider.value = Math.floor(player.currentTime);
-  current.textContent = calculateTime(seekSlider.value);
-})
+useEvents.forEach(event=> {
+  skipBack.addEventListener(event, (e) => { //Function for 'jumping back' some time on the track
+    if(event == "click" || e.keyCode == 13){
+      player.currentTime -= 10;
+      seekSlider.value = Math.floor(player.currentTime);
+      current.textContent = calculateTime(seekSlider.value);
+    }
+  })
+});
 
-skipForward.addEventListener('click', () => { //Function for forwarding some time on the track
-  player.currentTime += 10;
-  seekSlider.value = Math.floor(player.currentTime);
-  current.textContent = calculateTime(seekSlider.value);
-})
-
+useEvents.forEach(event=> {
+  skipForward.addEventListener(event, (e) => { //Function for forwarding some time on the track
+    if(event == "click" || e.keyCode == 13){
+      player.currentTime += 10;
+      seekSlider.value = Math.floor(player.currentTime);
+      current.textContent = calculateTime(seekSlider.value);
+    }
+  })
+});
 
 function updateSrc(src) {//Function for updating the src of the player
   player.src = src
@@ -106,25 +140,6 @@ function updateSrc(src) {//Function for updating the src of the player
   playState = 'playing'
   player.play()
   requestAnimationFrame(whilePlaying);
-}
-
-function playToggle() { //Function for the play and pause button
-  if(player.src == null || player.src == undefined || player.src == false){ //If the player does not have a src the play/pause button should not work
-    return
-  }
-  if(playState == 'paused'){//If the player is paused it should play
-    pauseButton.style = 'display: block;'
-    playButton.style = 'display: none;'
-    player.play()
-    requestAnimationFrame(whilePlaying); //Starting the auto update of the audio track
-    playState = 'playing'
-  } else {//If the player is playing it should pause
-    playButton.style = 'display: block;'
-    pauseButton.style = 'display: none;'
-    player.pause()
-    cancelAnimationFrame(RAF); //Cancel the auto update of the audio track
-    playState = 'paused'
-  }
 }
 
 function whilePlaying() { //Function that updates the audiotrack

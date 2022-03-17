@@ -14,17 +14,17 @@
 <body>
     <div id="audio-player-container">
       <audio data-player preload="metadata"></audio>
-      <div data-play-pause>
+      <div data-play-pause tabindex="0">
         <img data-play src="./imgs/play.svg" style="display: block;">
         <img data-pause src="./imgs/pause.svg" style="display: none;">
       </div>
-      <div data-skip-back>
+      <div data-skip-back tabindex="0">
         <img src="./imgs/back.svg" style="display: block;">
       </div>
-      <div data-skip-forward>
+      <div data-skip-forward tabindex="0">
         <img src="./imgs/forward.svg" style="display: block;">
       </div>
-      <div data-playback-speed>1x</div>
+      <div data-playback-speed tabindex="0">1x</div>
       <input data-seek-slider type="range" max="100" value="0">
       <span data-current-time>0:00</span>|
       <span data-duration-time>0:00</span>
