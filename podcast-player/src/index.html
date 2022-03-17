@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+  <title>Player</title>
+</head>
+
+<body>
+    <audio id="player"></audio>
+    <div id="player-visual">
+      <img id="play-pause" src="./imgs/play.svg" onclick="togglePlay()">
+      <img id="skip-back" src="./imgs/back.svg" onclick="skipForward()">
+      <img id="skip-forward" src="./imgs/forward.svg" onclick="skipBackwards()">
+      <img id="volume-icon" src="./imgs/volume-full.svg" onclick="togglemute()">
+      <p id="current"></p>
+    </div>
+
+
+</body>
+</html>

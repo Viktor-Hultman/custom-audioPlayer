@@ -1,0 +1,67 @@
+.mejs__controls {
+  display: block;
+}
+.mejs__controls, .mejs__container {
+  background: none !important;
+}
+.mejs__time {
+  color: #777;
+  font-weight: normal;
+}
+
+.podcast {
+  background: #f0f0f0;
+  padding: 10px;
+  border-radius: 3px;
+}
+.podcast__meta {
+  background: #ddd;
+  margin: 0px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.mejs-prepended-buttons {
+  display: flex;
+}
+
+.mejs-appended-buttons {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.mejs__play > button {
+  background: transparent url("https://cdn.jsdelivr.net/gh/ivorpad/images-src/mediaplayer-sprite-gray.svg") no-repeat;
+}
+
+.mejs__pause > button {
+  background: transparent url("https://cdn.jsdelivr.net/gh/ivorpad/images-src/mediaplayer-sprite-gray.svg") no-repeat;
+  background-position: -20px 0;
+}
+
+.mejs__mute > button {
+  background: transparent url("https://cdn.jsdelivr.net/gh/ivorpad/images-src/mediaplayer-sprite-gray.svg") no-repeat;
+  background-position: -60px 0;
+}
+
+.mejs__unmute > button {
+  background: transparent url("https://cdn.jsdelivr.net/gh/ivorpad/images-src/mediaplayer-sprite-gray.svg") no-repeat;
+  background-position: -40px 0;
+}
+
+.mejs-skip-back-button > button,
+.mejs__skip-back-button > button {
+  background: transparent url("https://cdn.jsdelivr.net/gh/ivorpad/images-src/skipback.svg");
+}
+
+.mejs-jump-forward-button > button,
+.mejs__jump-forward-button > button {
+  background: url("https://cdn.jsdelivr.net/gh/ivorpad/images-src/jumpforward.svg") no-repeat;
+}
+
+.mejs__button > button {
+  color: #555;
+}
