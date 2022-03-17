@@ -1,8 +1,14 @@
-#player-visual{
+#audio-player-container{
     height: 50px;
     background: darkgrey;
     display: flex;
     align-items: center;
+    max-width: 600px;
+    justify-content: space-around;
+}
+
+#volume-slider{
+    max-width: 100px;
 }
 
 

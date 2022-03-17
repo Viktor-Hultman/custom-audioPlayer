@@ -12,13 +12,18 @@
 </head>
 
 <body>
-    <audio id="player"></audio>
-    <div id="player-visual">
-      <img id="play-pause" src="./imgs/play.svg" onclick="togglePlay()">
-      <img id="skip-back" src="./imgs/back.svg" onclick="skipForward()">
-      <img id="skip-forward" src="./imgs/forward.svg" onclick="skipBackwards()">
-      <img id="volume-icon" src="./imgs/volume-full.svg" onclick="togglemute()">
-      <p id="current"></p>
+    <div id="audio-player-container">
+      <audio id="player" preload="metadata"></audio>
+      <img id="play-pause" src="./imgs/play.svg">
+      <img id="skip-back" src="./imgs/back.svg" onclick="skipBackwards()">
+      <img id="skip-forward" src="./imgs/forward.svg" onclick="skipForward()">
+      <button id="playback-speed">1x</button>
+      <input type="range" id="seek-slider" max="100" value="0">
+      <span id="current-time" class="time">0:00</span>|
+      <span id="duration-time" class="time">0:00</span>
+      <img id="volume-icon" src="./imgs/volume-full.svg">
+      <input type="range" id="volume-slider" max="100" value="100">
+      <output id="volume-output">100</output>
     </div>
 
 
