@@ -23,7 +23,7 @@ const volumeOff = volumeIconContainer.querySelector('[data-volume-off]')
 const volumeSlider = audioPlayerContainer.querySelector('[data-volume-slider]');
 const output = audioPlayerContainer.querySelector('[data-volume-output]');
 
-//Targeting all the elements of the audio player
+//^Targeting all the elements of the audio player^
 
 
 volumeSlider.addEventListener('input', (e) => { //Listener for the volumeslider
